@@ -204,11 +204,11 @@ input[type="password"], input[type="email"] {
   font-family: var(--sans-font) !important;
 }
 
-/* Card titles have their own theme font stack */
-.card .card-content .card-title,
-.card .card-reveal .card-title,
-.card-content .card-title,
-.card-reveal .card-title {
+/* Card titles have their own theme font stack; the reveal's close icon is also a .card-title */
+.card .card-content .card-title:not(.material-icons),
+.card .card-reveal .card-title:not(.material-icons),
+.card-content .card-title:not(.material-icons),
+.card-reveal .card-title:not(.material-icons) {
   font-family: var(--sans-font) !important;
   font-weight: 600;
 }
