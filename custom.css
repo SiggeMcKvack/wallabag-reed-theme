@@ -1,0 +1,1828 @@
+@charset "UTF-8";
+
+/* =========================================================================
+   Reed for Wallabag 2.6.14 — a calm, warm theme: paper by day, warm brown by night.
+   Structure from wallabag-material-theme, palette and type from Reed (FreshRSS).
+   Loads after Wallabag's own CSS; dark mode follows html.dark-theme, which
+   Wallabag sets from its theme toggle (Auto follows the OS).
+   ========================================================================= */
+
+/* =========================================================================
+   WEBFONTS
+   ========================================================================= */
+/* Lucide behind Wallabag's Material ligature names (tools/build-icons.py) */
+@font-face {
+  font-family: "Lucide Wallabag";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("fonts/lucide-wallabag.woff2") format("woff2");
+}
+
+/* Split by script: browsers only fetch Greek and Cyrillic when a page uses them */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/InterVariable-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/InterVariable-greek.woff2") format("woff2");
+  unicode-range: U+0370-03FF, U+1F00-1FFF;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/InterVariable-cyrillic.woff2") format("woff2");
+  unicode-range: U+0400-052F, U+1C80-1C8F, U+2DE0-2DFF, U+A640-A69F;
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-greek.woff2") format("woff2");
+  unicode-range: U+0370-03FF, U+1F00-1FFF;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-cyrillic.woff2") format("woff2");
+  unicode-range: U+0400-052F, U+1C80-1C8F, U+2DE0-2DFF, U+A640-A69F;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-Italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-Italic-greek.woff2") format("woff2");
+  unicode-range: U+0370-03FF, U+1F00-1FFF;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/Literata-Italic-cyrillic.woff2") format("woff2");
+  unicode-range: U+0400-052F, U+1C80-1C8F, U+2DE0-2DFF, U+A640-A69F;
+}
+
+/* =========================================================================
+   TOKENS — Reed's palette
+   ========================================================================= */
+:root {
+  color-scheme: light;
+  accent-color: var(--accent);
+
+  --sans-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+               "Segoe UI", Roboto, sans-serif;
+  --serif-font: "Literata", "Iowan Old Style", "Charter", "Palatino Linotype", Georgia, serif;
+  --mono-font: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg: #f7f1e8;
+  --bg-sidebar: #efe7dc;
+  --bg-hover: #2b1d140a;
+  --bg-selected: #2b1d1412;
+  --bg-raised: #fffcf7;
+  --separator: #e3d9cc;
+  --text: #3b312c;
+  --text-strong: #1f1916;
+  --text-secondary: #6b5f58;
+  --text-tertiary: #a3968e;
+  /* Dimmest grey for text people read (5.0:1 on --bg) */
+  --text-muted: #72655e;
+  /* Darker than the dark palette's amber so it reads as text (5.4:1 on --bg) */
+  --accent: #8a580b;
+  --accent-strong: #6e4506;
+  --accent-soft: color-mix(in srgb, var(--accent) 20%, transparent);
+  /* Opaque accent tint for selected options */
+  --accent-fill: #ecd7ae;
+  --red: #ab372e;
+  --green: #3f6a35;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --focus-glow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  /* Popovers sit on --bg-raised, where --separator disappears */
+  --edge-raised: #2b1d1421;
+  --shadow-pop: 0 8px 24px #3a28182e;
+  --field-fill: #fffcf799;
+  /* 3.1:1 against the page, enough to identify the field */
+  --field-outline: #2b1d1480;
+  --field-outline-hover: #2b1d14a6;
+  --fill-subtle: #2b1d141a;
+  /* Cards: lifted off the page like paper on paper */
+  --fill-card: #fffcf7b3;
+  /* Chip labels: secondary passes on light chips, dark needs full text */
+  --chip-text: var(--text-secondary);
+  --ease: 150ms ease;
+
+  /* Reused layout metrics */
+  --field-height: 44px;
+  --field-pad-x: 14px;
+  --label-rest-x: 13px;
+  --label-float-x: 9px;
+  --label-size: 15px;
+  --settings-gap: 16px;
+  --status-badge-width: 74px;
+  --status-badge-height: 24px;
+  --action-link-size: 1rem;
+  --table-cell-pad-y: 10px;
+  --table-cell-pad-x: 15px;
+  --reset-action-gap: 16px;
+}
+
+html.dark-theme {
+  color-scheme: dark;
+
+  --bg: #2b2422;
+  --bg-sidebar: #221c1a;
+  --bg-hover: #ffffff08;
+  --bg-selected: #ffffff12;
+  --bg-raised: #3a312e;
+  --separator: #3a322f;
+  --text: #e6e0dc;
+  --text-strong: #f6f1ed;
+  --text-secondary: #b8aea9;
+  --text-tertiary: #776d68;
+  /* 4.5:1 or more on every raised surface (4.9:1 on --bg-raised) */
+  --text-muted: #aa9f9a;
+  --accent: #e0ac52;
+  --accent-strong: #ecbf6f;
+  --accent-fill: #665130;
+  --red: #ee8a82;
+  --green: #8fbf7f;
+
+  --edge-raised: #ffffff14;
+  --shadow-pop: 0 8px 24px #0009;
+  --field-fill: #00000026;
+  --field-outline: #ffffff5c;
+  --field-outline-hover: #ffffff80;
+  --fill-subtle: #ffffff1f;
+  --fill-card: #ffffff0a;
+  --chip-text: var(--text);
+}
+
+/* =========================================================================
+   1. FONTS
+   ========================================================================= */
+html, body {
+  font-family: var(--sans-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Form controls do not inherit body font-family everywhere */
+input, textarea, select, button,
+input[type="text"], input[type="url"], input[type="search"],
+input[type="password"], input[type="email"] {
+  font-family: var(--sans-font) !important;
+}
+
+/* Card titles have their own theme font stack */
+.card .card-content .card-title,
+.card .card-reveal .card-title,
+.card-content .card-title,
+.card-reveal .card-title {
+  font-family: var(--sans-font) !important;
+  font-weight: 600;
+}
+
+/* Lucide strokes are lighter than Material's fills: 20px reads like Material's 24px */
+.card-content .activator,
+.card-reveal .activator,
+.material-icons,
+i.material-icons {
+  font-family: "Lucide Wallabag" !important;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: normal !important;
+  /* The font has one style: <i>'s default italic would be synthesised as a slant */
+  font-synthesis: none;
+}
+/* Wallabag's size helpers (Materialize .tiny/.small) */
+i.material-icons.tiny { font-size: 1rem; }
+i.material-icons.small { font-size: 1.5rem; }
+
+/* The add/search/clear buttons in the top bar print an empty <i>; give the ligature its word */
+i.material-icons.add:empty::before { content: "add"; }
+i.material-icons.search:empty::before { content: "search"; }
+i.material-icons.close:empty::before { content: "close"; }
+
+/* Generic icomoon icons (public link toggle) use Lucide too; brand logos keep icomoon */
+.icon-eye::before,
+.icon-no-eye::before,
+.icon-calendar::before,
+.icon-mail::before,
+.icon-time::before,
+.icon-link::before {
+  font-family: "Lucide Wallabag" !important;
+}
+.icon-eye::before { content: "\e0ba"; }
+.icon-no-eye::before { content: "\e0bb"; }
+.icon-calendar::before { content: "\e063"; }
+.icon-mail::before { content: "\e10f"; }
+.icon-time::before { content: "\e087"; }
+.icon-link::before { content: "\e102"; }
+
+#article, #article article { font-family: var(--serif-font); }
+#article pre, #article code { font-family: var(--mono-font); }
+
+/* =========================================================================
+   2. GLOBAL SURFACES + TEXT
+   ========================================================================= */
+body                 { background: var(--bg); color: var(--text); }
+html.dark-theme body { background-color: var(--bg); }   /* beats #101010 */
+html.dark-theme #content { color: var(--text); }
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--text-strong);
+}
+.border-bottom,
+html.dark-theme .border-bottom { border-bottom-color: var(--separator); }
+
+h1, h2, h3, h4, h5, h6 { color: var(--text-strong); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   3. ACCENT
+   ========================================================================= */
+a          { color: var(--accent); }
+a:hover    { color: var(--accent-strong); }
+.btn-link,
+.results-item.btn-link { color: var(--accent) !important; }
+/* entry-list toolbar icons are informational controls, not accent actions */
+form[action*="switch-view-mode"] .btn-link.results-item,
+form[action*="switch-view-mode"] .btn-link.results-item i.material-icons,
+.mass-action-toggle.results-item,
+.mass-action-toggle.results-item i.material-icons {
+  color: var(--text-secondary) !important;
+}
+form[action*="switch-view-mode"] .btn-link.results-item:hover,
+form[action*="switch-view-mode"] .btn-link.results-item:hover i.material-icons,
+form[action*="switch-view-mode"] .btn-link.results-item:focus,
+form[action*="switch-view-mode"] .btn-link.results-item:focus i.material-icons,
+.mass-action-toggle.results-item:hover,
+.mass-action-toggle.results-item:hover i.material-icons,
+.mass-action-toggle.results-item:focus,
+.mass-action-toggle.results-item:focus i.material-icons {
+  color: var(--text-strong) !important;
+}
+button.btn-link.results-item,
+button.btn-link.results-item i.material-icons,
+label.mass-action-toggle.results-item,
+label.mass-action-toggle.results-item i.material-icons {
+  color: var(--text-secondary) !important;
+}
+button.btn-link.results-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+button.btn-link.results-item:hover,
+button.btn-link.results-item:hover i.material-icons,
+button.btn-link.results-item:focus,
+button.btn-link.results-item:focus i.material-icons,
+.results:has(~ #mass-action-inputs-displayed:focus-visible) label.mass-action-toggle {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+label.mass-action-toggle.results-item:hover,
+label.mass-action-toggle.results-item:hover i.material-icons,
+label.mass-action-toggle.results-item:focus,
+label.mass-action-toggle.results-item:focus i.material-icons {
+  color: var(--text-strong) !important;
+}
+
+/* ---- BUTTONS -------------------------------------------------------------
+   Materialize 0.100.2 ships Material 1 buttons: uppercase, 2px corners, a
+   drop shadow. Reed's primary is flat, sentence case, 6px corners, semibold. */
+.btn, .btn-large, .btn-flat, .mass-action-button {
+  text-transform: none;
+  letter-spacing: normal;
+  border-radius: var(--radius);
+  box-shadow: none !important;   /* kills .z-depth-1 */
+  font-size: .9rem;
+  font-weight: 600;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 18px;
+  transition: background-color var(--ease), color var(--ease);
+}
+.btn-large { height: 46px; line-height: 46px; padding: 0 24px; }
+.btn:hover, .btn-large:hover, .btn-flat:hover, .mass-action-button:hover {
+  box-shadow: none !important;   /* kills .z-depth-1-half on hover */
+}
+/* Materialize's disabled button is a light grey pill, also in dark */
+.btn.disabled, .btn:disabled, .btn[disabled] {
+  background-color: var(--fill-subtle) !important;
+  color: var(--text-muted) !important;
+}
+/* Materialize's flat button text is #343434, invisible in dark */
+.btn-flat, html.dark-theme .btn-flat { color: var(--accent); }
+.btn-floating { border-radius: var(--radius-lg) !important; box-shadow: none !important; }
+.btn-floating:hover { box-shadow: none !important; }
+.fixed-action-btn > a.btn-floating.btn-large {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.fixed-action-btn > a.btn-floating.btn-large > i.material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn, .btn-large, .btn-floating,
+:not(nav, footer).cyan, :not(nav, footer).cyan.darken-1, :not(nav, footer).cyan.darken-2,
+.mass-action-button,
+html.dark-theme :not(nav, footer).cyan,
+html.dark-theme :not(nav, footer).cyan.darken-1,
+html.dark-theme :not(nav, footer).cyan.darken-2 {
+  background-color: var(--accent) !important;
+  color: var(--bg) !important;
+}
+.btn i.material-icons,
+.btn-floating i.material-icons { color: var(--bg); }
+/* The phone reader bar is also .cyan.darken-1: keep it a bar, not an accent button */
+nav .nav-panel-item.cyan.darken-1,
+html.dark-theme nav .nav-panel-item.cyan.darken-1 {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--separator);
+}
+.btn:hover, .btn-large:hover, .btn-floating:hover,
+:not(nav, footer).cyan:hover, :not(nav, footer).cyan.darken-1:hover,
+html.dark-theme :not(nav, footer).cyan:hover,
+html.dark-theme :not(nav, footer).cyan.darken-1:hover {
+  background-color: var(--accent-strong) !important;
+}
+/* Destructive actions: outlined in a red tint, like Reed's .btn-attention */
+.btn.red,
+html .mass-action-button.cyan.darken-1[name="delete"],
+html.dark-theme .btn.red {
+  background-color: transparent !important;
+  color: var(--red) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 40%, transparent) !important;
+}
+.btn.red:hover,
+html .mass-action-button.cyan.darken-1[name="delete"]:hover,
+html.dark-theme .btn.red:hover {
+  background-color: color-mix(in srgb, var(--red) 15%, transparent) !important;
+}
+nav.cyan,
+nav.cyan.darken-1,
+html.dark-theme nav.cyan,
+html.dark-theme nav.cyan.darken-1 {
+  background-color: var(--bg) !important;
+}
+.waves-effect .waves-ripple { background-color: var(--accent-soft); }
+
+/* =========================================================================
+   4. TOP NAV
+   The <nav> element itself is `class="cyan darken-1"` (layout.html.twig:29),
+   and Materialize's `nav ul a { color: #fff }` assumes that cyan bar.
+   ========================================================================= */
+nav, nav.cyan, nav.cyan.darken-1 {
+  background-color: var(--bg) !important;
+  box-shadow: none;
+  border-bottom: 1px solid var(--separator);
+}
+nav .nav-wrapper .brand-logo,
+nav .brand-logo { color: var(--text-strong) !important; font-weight: 600; }
+.nav-panels,
+html.dark-theme .nav-panels {
+  background-color: var(--bg);
+  color: var(--text);
+  box-shadow: none;
+}
+.nav-panels .action {
+  margin: 7px;
+}
+.nav-panel-top,
+.nav-panel-actions {
+  background-color: var(--bg);
+  color: var(--text);
+  box-shadow: none;
+}
+
+/* Materialize's nav link colour is #fff */
+nav ul a,
+nav ul a i.material-icons,
+nav .button-collapse,
+nav .button-collapse i,
+nav .nav-panel-menu,
+nav .nav-panel-menu i.material-icons,
+html.dark-theme nav ul a,
+html.dark-theme nav ul a i.material-icons {
+  color: var(--text-secondary) !important;
+}
+nav ul a:hover,
+nav ul a:hover i.material-icons,
+nav a:hover,
+nav a:hover i.material-icons,
+nav a:focus,
+nav a:focus i.material-icons,
+nav .button-collapse:hover i,
+nav .button-collapse:focus i,
+html.dark-theme nav a:hover,
+html.dark-theme nav a:hover i.material-icons,
+html.dark-theme nav a:focus,
+html.dark-theme nav a:focus i.material-icons { color: var(--text-strong) !important; }
+nav ul a {
+  border-radius: var(--radius);
+  transition: background-color var(--ease), color var(--ease);
+}
+nav ul a:hover { background-color: var(--bg-hover); }
+
+/* theme uses !important here (nav.scss:82) — must match */
+.nav-panel-item .add,
+.nav-panel-item .search,
+.nav-panels .close,
+html.dark-theme .nav-panel-item .add,
+html.dark-theme .nav-panel-item .search,
+html.dark-theme .nav-panels .close { color: var(--text-secondary) !important; }
+.nav-panel-item button.nav-form-button:hover .material-icons,
+.nav-panel-item button.nav-form-button:focus .material-icons,
+.nav-panel-item:hover .add,
+.nav-panel-item:hover .search,
+html.dark-theme .nav-panel-item button.nav-form-button:hover .material-icons,
+html.dark-theme .nav-panel-item button.nav-form-button:focus .material-icons,
+html.dark-theme .nav-panel-item:hover .add,
+html.dark-theme .nav-panel-item:hover .search,
+.nav-panel-item .add:hover,
+.nav-panel-item .add:focus,
+.nav-panel-item .search:hover,
+.nav-panel-item .search:focus,
+.nav-panels .close:hover,
+.nav-panels .close:focus,
+html.dark-theme .nav-panel-item .add:hover,
+html.dark-theme .nav-panel-item .add:focus,
+html.dark-theme .nav-panel-item .search:hover,
+html.dark-theme .nav-panel-item .search:focus,
+html.dark-theme .nav-panels .close:hover,
+html.dark-theme .nav-panels .close:focus {
+  color: var(--text-strong) !important;
+}
+.toggle-add-url-container {
+  flex: 0 0 auto;
+}
+.toggle-add-url-container > a.toggle-add-url {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 0;
+  padding: 10px;
+}
+@media only screen and (max-width: 992px) {
+  .nav-panel-button {
+    justify-content: flex-end;
+    gap: 7px;
+  }
+}
+
+nav ul button        { color: var(--text-secondary); }
+nav ul button:hover  { background-color: var(--bg-hover); }
+nav input,
+html.dark-theme nav input { color: var(--text); }
+input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 1; }
+.nav-panels .input-field input:focus,
+html.dark-theme .nav-panels .input-field input:focus { color: var(--text) !important; }
+
+html.dark-theme .nav-panel-add,
+html.dark-theme .nav-panel-search { background-color: var(--bg) !important; }
+
+/* =========================================================================
+   5. LEFT SIDEBAR — Reed's quiet source list
+   ========================================================================= */
+.side-nav, .left-bar.side-nav.fixed,
+.side-nav .collapsible-body,
+.side-nav.fixed .collapsible-body,
+html.dark-theme .side-nav,
+html.dark-theme .side-nav .collapsible-body,
+html.dark-theme .side-nav.fixed .collapsible-body { background-color: var(--bg-sidebar); }
+.side-nav,
+.left-bar.side-nav.fixed {
+  box-shadow: none;
+  border-right: 1px solid var(--separator);
+}
+
+.side-nav li > a,
+.side-nav li button,
+html.dark-theme .side-nav li > a,
+html.dark-theme .side-nav li button {
+  color: var(--text) !important;
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.side-nav li > a > i.material-icons,
+.side-nav li button > i,
+.side-nav li button > i.material-icons,
+html.dark-theme .side-nav li > a > i.material-icons,
+html.dark-theme .side-nav li button > i.material-icons { color: var(--text-secondary) !important; }
+
+/* Rows: inset rounded fills, not edge-to-edge bands */
+.side-nav li:not(.logo) {
+  margin: 1px 8px;
+  border-radius: var(--radius);
+}
+.side-nav li:not(.logo) > a,
+.side-nav li:not(.logo) button {
+  border-radius: var(--radius);
+  transition: background-color var(--ease), color var(--ease);
+}
+.side-nav li:not(.logo) > a:hover,
+.side-nav li:not(.logo) button:hover,
+.side-nav .collapsible-header:hover,
+.side-nav.fixed .collapsible-header:hover,
+html.dark-theme .side-nav .collapsible-header:hover,
+html.dark-theme .side-nav.fixed .collapsible-header:hover,
+html.dark-theme .side-nav li:not(.logo) > a:hover,
+html.dark-theme .side-nav li:not(.logo) button:hover {
+  background-color: var(--bg-hover);
+}
+.side-nav li:not(.logo) > a:hover,
+.side-nav li:not(.logo) > a:hover > i.material-icons,
+.side-nav li:not(.logo) button:hover,
+.side-nav li:not(.logo) button:hover > i.material-icons,
+html.dark-theme .side-nav li:not(.logo) > a:hover,
+html.dark-theme .side-nav li:not(.logo) > a:hover > i.material-icons,
+html.dark-theme .side-nav li:not(.logo) button:hover,
+html.dark-theme .side-nav li:not(.logo) button:hover > i.material-icons {
+  color: var(--text-strong) !important;
+}
+
+.side-nav li.active,
+html.dark-theme .side-nav li.active { background-color: var(--bg-selected); }
+/* Every item is .bold; only the current one is strong */
+.side-nav li.active > a,
+html.dark-theme .side-nav li.active > a { color: var(--text-strong) !important; font-weight: 600; }
+.side-nav li.active > a > i.material-icons,
+html.dark-theme .side-nav li.active > a > i.material-icons { color: var(--accent) !important; }
+/* --text-muted is 4.0:1 on the light selected row */
+.side-nav li.active .items-number { color: var(--text) !important; }
+.side-nav .divider { background-color: var(--separator); }
+.side-nav li.logo > a:focus-visible { outline-offset: -2px; border-radius: var(--radius); }
+
+/* Counters: faint plain numbers */
+.side-nav .numberItems,
+.side-nav .badge {
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+footer .row {
+  margin-bottom: 0;
+}
+
+.collapsible,
+.collapsible-header,
+html.dark-theme .collapsible-header,
+html.dark-theme .collapsible,
+html.dark-theme .collapsible-body {
+  background-color: var(--bg-sidebar);
+  border-color: var(--separator);
+  box-shadow: none;
+}
+
+/* =========================================================================
+   6. ENTRY CARDS — paper on paper
+   ========================================================================= */
+.card, .card.entry-card, .card-panel,
+html.dark-theme .card,
+html.dark-theme .card-panel {
+  background-color: var(--fill-card);
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  overflow: hidden;
+  transition: background-color var(--ease), border-color var(--ease);
+}
+.collection {
+  border-radius: var(--radius-lg);
+}
+.tags-add-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tags-add-form input[type="text"] {
+  margin-bottom: 0;
+}
+.card-panel.settings .row > .col,
+.card-panel.settings .row > li.col {
+  padding-left: 0;
+  padding-right: 0;
+}
+.quickstart ul.row > li.col.l4.m6.s12 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.quickstart .card,
+.quickstart .card .card-content,
+.quickstart .card .card-action,
+.quickstart .card.cyan.darken-1,
+html.dark-theme .quickstart .card.cyan.darken-1 {
+  background-color: var(--fill-card) !important;
+  border-color: var(--separator);
+}
+.quickstart .card .card-content.white-text,
+.quickstart .card .card-content .card-title.white-text,
+.quickstart .card .card-content.white-text p {
+  color: var(--text) !important;
+}
+.quickstart .card .card-content .card-title.white-text { color: var(--text-strong) !important; }
+.quickstart .card .card-content.white-text {
+  padding-top: 12px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.quickstart .card .card-action a,
+.quickstart .card .card-action a:hover {
+  color: var(--accent) !important;
+  text-decoration: none;
+}
+.card:hover,
+html.dark-theme .card:hover {
+  background-color: var(--bg-raised);
+  box-shadow: none;
+}
+ul.row > li.col.l6.m6.s12:nth-child(-n + 2) > .card:hover,
+html.dark-theme ul.row > li.col.l6.m6.s12:nth-child(-n + 2) > .card:hover,
+body.login .card.sw:hover,
+html.dark-theme body.login .card.sw:hover,
+.card-panel:hover {
+  background-color: var(--fill-card) !important;
+}
+.card.entry-card.archived { opacity: 1; }
+.card.entry-card.archived .card-image { opacity: .62; }
+
+/* preview image + its placeholder grey (cards.scss:147 -> #efefef) */
+.card .card-image .preview,
+.card .card-fullimage .preview,
+.card-stacked .preview,
+html.dark-theme .card .preview:not(.preview--default),
+html.dark-theme .card-stacked .preview:not(.preview--default) {
+  background-color: var(--bg-sidebar);
+  border-radius: 0;
+}
+
+.card .card-content { color: var(--text); }
+.card .card-content .card-title,
+.card .card-reveal .card-title,
+a.card-title {
+  color: var(--text-strong) !important;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+a.card-title:hover { color: var(--accent) !important; }
+
+/* domain + reading time */
+.card .card-content .original,
+.card .original a.tool,
+.card .reading-time,
+.card .card-reading-time,
+.card .reading-time .grey-text {
+  color: var(--text-muted) !important;
+  font-size: .85rem;
+}
+/* Domain as a small uppercase source line, like Reed's feed names */
+.card .card-content .original,
+.card .original a.tool,
+.card-stacked .card-content .original,
+.card-stacked .original a.tool,
+.card-stacked div.metadata > a.tool {
+  font-size: .75rem !important;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.card-reading-time,
+.card-stacked .card-reading-time,
+#list .card-reading-time {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .35rem;
+}
+aside.entry-info .stats,
+aside.entry-info .stats li,
+aside.entry-info .stats a,
+aside.entry-info .stats span,
+aside.entry-info .chip-label,
+aside.entry-info .chip-label a,
+aside.entry-info .chip-label span {
+  font-family: var(--sans-font) !important;
+}
+.card .reading-time i.material-icons,
+.card .card-reading-time i.material-icons,
+.card-stacked div.metadata .card-reading-time i.material-icons,
+#list .card-reading-time i.material-icons,
+#article .entry-info .stats i.material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+.card .reading-time span,
+.card .card-reading-time span,
+.card-stacked div.metadata .card-reading-time span,
+#list .card-reading-time span,
+#article .entry-info .stats span {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
+}
+.card .original a.tool:hover { color: var(--text-strong) !important; }
+.card .card-content i.material-icons,
+.card .activator.material-icons { color: var(--text-muted); }
+.grey-text,
+html.dark-theme .grey-text { color: var(--text-muted) !important; }
+.grey-text.text-darken-4,
+html.dark-theme .grey-text.text-darken-4 { color: var(--text) !important; }
+
+/* --- TAG LABELS -------------------------------------------------------- */
+.card-entry-labels li,
+.card-tag-labels li,
+.card .card-entry-labels-hidden li,
+.card-entry-labels-hidden li,
+.card .chip,
+#list .chip,
+.card-stacked div.metadata .chip,
+.card-stacked .chip {
+  background-color: var(--fill-subtle) !important;
+  color: var(--chip-text) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--ease), color var(--ease);
+}
+
+.card-entry-tags a,
+.card-entry-labels a,
+.card-tag-labels a,
+.card-tag-labels button,
+.card-entry-labels-hidden a,
+#list .chip a,
+.card-stacked div.metadata .chip a,
+.card-stacked div.metadata .chip i,
+.card-stacked .chip a,
+.card-stacked .chip i { color: var(--chip-text) !important; }
+body:not(.entry) ul.tags li.chip {
+  position: relative;
+  outline: 0 !important;
+}
+body:not(.entry) .card-stacked .metadata {
+  overflow: visible;
+}
+
+/* Hover: the chip takes the accent tint, its label the accent */
+.card-entry-labels li:hover,
+.card-tag-labels li:hover,
+.card-entry-labels-hidden li:hover,
+.card .chip:hover,
+#list .chip:hover,
+.card-stacked div.metadata .chip:hover,
+.card-stacked .chip:hover {
+  background-color: var(--accent-fill) !important;
+}
+.card-entry-labels li:hover a,
+.card-tag-labels li:hover a,
+.card-tag-labels li:hover button,
+.card-entry-labels-hidden li:hover a,
+.card .chip:hover a,
+#list .chip:hover a,
+.card-stacked div.metadata .chip:hover a,
+.card-stacked div.metadata .chip:hover i,
+.card-stacked .chip:hover a,
+.card-stacked .chip:hover i { color: var(--text-strong) !important; }
+
+
+/* --- CARD ACTION BAR --------------------------------------------------- */
+.card .card-action,
+html.dark-theme .card .card-action {
+  background-color: transparent;
+  border-top: 1px solid var(--separator);
+}
+.card .card-action a,
+.card .card-action button,
+.card .card-action .tool,
+.card .card-action .btn-link,
+.card .card-action i.material-icons,
+.card .card-action .reading-time,
+.card .card-action .grey-text,
+.card .card-action .grey-text i.material-icons {
+  color: var(--text-muted) !important;
+}
+.card .card-action a:hover,
+.card .card-action button:hover,
+.card .card-action .tool:hover,
+.card .card-action .btn-link:hover,
+.card .card-action a:hover i.material-icons,
+.card .card-action button:hover i.material-icons {
+  color: var(--text-strong) !important;
+}
+
+/* --- auth shells: login, reset, registration --------------------------- */
+body.login .card .card-action button.btn,
+body.login .card .card-action button.btn i.material-icons {
+  color: var(--bg) !important;
+}
+body.login .card .card-action button.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+body.login .card .card-action button.btn i.material-icons {
+  font-size: 1.1rem;
+  margin: 0;
+}
+body.login .card.sw > .center:first-child {
+  padding-top: 28px;
+  margin-bottom: 0;
+}
+body.login .row .col {
+  padding: 0;
+}
+body.login .card.sw .typo-logo {
+  max-width: 180px;
+}
+body.login .card.sw .card-action {
+  border-top: 0;
+}
+body.login .card.sw .card-action.center:last-child {
+  text-align: center;
+}
+body.login .card.sw .card-action.center:last-child a {
+  margin-right: 0;
+}
+
+/* Reset password / 2FA auth shell */
+body.login .card.sw form.fos_user_resetting_request .card-content,
+body.login .card.sw:has(.card-action > a.grey.btn[href="/logout"]) .card-content {
+  padding-top: 14px !important;
+  padding-bottom: 8px !important;
+}
+body.login form[action*="/resetting"] .input-field.col.s12,
+body.login .card.sw:has(.card-action > a.grey.btn[href="/logout"]) .input-field.col.s12 {
+  margin-top: 10px !important;
+  margin-bottom: -4px !important;
+}
+body.login .card.sw form.fos_user_resetting_request .card-action > a.btn,
+body.login .card.sw .card-action > a.grey.btn[href="/logout"] {
+  display: inline;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--accent) !important;
+  font-size: var(--action-link-size);
+  font-weight: 500;
+  line-height: inherit;
+  margin-right: var(--reset-action-gap);
+  text-transform: none;
+}
+body.login .card.sw form.fos_user_resetting_request .card-action > a.btn:hover,
+body.login .card.sw form.fos_user_resetting_request .card-action > a.btn:focus,
+body.login .card.sw .card-action > a.grey.btn[href="/logout"]:hover,
+body.login .card.sw .card-action > a.grey.btn[href="/logout"]:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--accent-strong) !important;
+  text-decoration: underline;
+}
+body.login .card.sw form.fos_user_resetting_request .card-action,
+body.login .card.sw:has(.card-action > a.grey.btn[href="/logout"]) .card-action {
+  padding: 12px 10px 36px !important;
+}
+body.login .card.sw form.fos_user_resetting_request .row,
+body.login .card.sw:has(.card-action > a.grey.btn[href="/logout"]) .row {
+  margin-bottom: 0;
+}
+
+/* Settings pages: section headings share Reed's settings heading */
+body:not(.login) .card-panel.settings h5 {
+  margin: 2rem 0 0 0;
+  color: var(--text-strong);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.card .card-reveal,
+html.dark-theme .card .card-reveal {
+  background-color: var(--bg-raised);
+  color: var(--text);
+}
+
+/* list mode */
+.collection, .collection .collection-item,
+html.dark-theme .collection,
+html.dark-theme .collection .collection-item {
+  background-color: var(--fill-card);
+  border-color: var(--separator);
+}
+/* Rows sit on the list's fill; a second one darkens them past --text-muted */
+.collection .collection-item,
+html.dark-theme .collection .collection-item { background-color: transparent; }
+.collection .collection-item:hover,
+html.dark-theme .collection .collection-item:hover {
+  background-color: var(--bg-hover);
+}
+
+/* =========================================================================
+   6b. LIST MODE — .card-stacked: rows without separators, a card on hover
+   ========================================================================= */
+.card-stacked { color: var(--text); }
+/* Wallabag fades the whole archived row (.5); dim only its picture so the text stays legible */
+.card-stacked.archived { opacity: 1; }
+.card-stacked.archived .card-preview { opacity: .62; }
+/* The <a> around the picture is inline with no size: ring the picture */
+.card-preview > a:focus-visible .preview { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Row actions only show on hover; show them when focus enters the row too */
+.card-stacked:focus-within ul.tools-list { display: inline; text-align: right; }
+
+.card-stacked .card-content .card-title,
+.card-stacked .card-content a.card-title {
+  font-family: var(--sans-font) !important;
+  color: var(--text-strong) !important;
+  font-weight: 600;
+}
+.card-stacked .card-content a.card-title:hover { color: var(--accent) !important; }
+
+.card-stacked .card-preview .preview,
+.card-stacked .preview { background-color: var(--bg-sidebar); }
+
+/* domain + reading time in list mode */
+.card-stacked div.metadata .reading-time,
+.card-stacked div.metadata .reading-time i.material-icons,
+.card-stacked .card-content .original,
+.card-stacked .original a.tool,
+.card-stacked .grey-text {
+  color: var(--text-muted) !important;
+  font-size: .85rem;
+}
+.card-stacked .original a.tool:hover { color: var(--text-strong) !important; }
+
+/* Hover-revealed tool icons */
+.card-stacked ul.tools-list a,
+.card-stacked ul.tools-list button,
+.card-stacked ul.tools-list .tool,
+.card-stacked ul.tools-list .btn-link,
+.card-stacked ul.tools-list i.material-icons,
+.card-stacked ul.tools-list .grey-text {
+  color: var(--text-muted) !important;
+}
+.card-stacked ul.tools-list a:hover,
+.card-stacked ul.tools-list button:hover,
+.card-stacked ul.tools-list .tool:hover,
+.card-stacked ul.tools-list .btn-link:hover,
+.card-stacked ul.tools-list a:hover i.material-icons,
+.card-stacked ul.tools-list button:hover i.material-icons {
+  color: var(--text-strong) !important;
+}
+form[action^="/share/"] .btn-link.tool,
+form[action^="/share/"] .btn-link.tool span {
+  color: var(--text) !important;
+}
+form[action^="/share/"] .btn-link.tool:hover,
+form[action^="/share/"] .btn-link.tool:hover span,
+form[action^="/share/"] .btn-link.tool:focus,
+form[action^="/share/"] .btn-link.tool:focus span {
+  color: var(--accent) !important;
+}
+
+
+/* =========================================================================
+   7. RESULTS BAR / MASS ACTIONS / PAGINATION
+   ========================================================================= */
+.results-item,
+html.dark-theme .results-item { color: var(--text-secondary); }
+.nb-results {
+  display: flex !important;
+  width: 100%;
+  align-items: center;
+  gap: 14px;
+  font-size: .85rem;
+}
+.nb-results > form[action*="switch-view-mode"] {
+  display: inline-flex;
+  margin-left: auto !important;
+}
+.nb-results > .mass-action-toggle,
+.nb-results > a.results-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mass-action-tags .mass-action-tags-input.mass-action-tags-input,
+html.dark-theme .mass-action-tags .mass-action-tags-input.mass-action-tags-input {
+  background: var(--field-fill);
+  color: var(--text);
+  border: 1px solid var(--field-outline);
+  border-radius: var(--radius);
+  height: 38px;
+  padding: 0 var(--field-pad-x);
+}
+.mass-action-tags .mass-action-tags-input.mass-action-tags-input.mass-action-tags-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: var(--focus-glow);
+}
+
+.pagination li { border-radius: var(--radius); }
+.pagination li.active,
+html.dark-theme .pagination li.active {
+  background-color: var(--bg-selected) !important;
+}
+.pagination li.active a,
+.pagination li.active span { color: var(--text-strong); font-weight: 600; }
+.pagination li:not(.active) a,
+.pagination li:not(.active) span { color: var(--text-secondary); }
+.pagination li:not(.active) a:hover,
+.pagination li:not(.active) a:active,
+.pagination li:not(.active) a:focus,
+html.dark-theme .pagination li:not(.active) a:hover,
+html.dark-theme .pagination li:not(.active) a:active,
+html.dark-theme .pagination li:not(.active) a:focus {
+  background-color: var(--bg-hover);
+  color: var(--text-strong);
+  border-radius: var(--radius);
+}
+
+/* =========================================================================
+   8. FORMS — Reed's filled, outlined fields with Materialize's floating label
+   ========================================================================= */
+.input-field {
+  position: relative;
+  margin-top: 0;
+}
+
+.input-field input:not([type]),
+.input-field input[type="text"],
+.input-field input[type="url"],
+.input-field input[type="search"],
+.input-field input[type="email"],
+.input-field input[type="password"],
+.input-field input[type="number"],
+.input-field textarea.materialize-textarea,
+.craue_config_settings_modify [id^="set-"] > div > input[type="text"] {
+  border: 1px solid var(--field-outline) !important;
+  border-radius: var(--radius) !important;
+  box-sizing: border-box;
+  padding: 0 var(--field-pad-x) !important;
+  box-shadow: none !important;
+  background-color: var(--field-fill);
+  color: var(--text);
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+.input-field textarea.materialize-textarea { padding: 14px !important; }
+.input-field input:hover,
+.input-field textarea.materialize-textarea:hover {
+  border-color: var(--field-outline-hover) !important;
+}
+
+/* Hide browser number steppers */
+.input-field input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.input-field input[type="number"]::-webkit-outer-spin-button,
+.input-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Accent border and glow on focus; the glow keeps box metrics */
+.input-field input:not([type]):focus:not([readonly]),
+.input-field input[type="text"]:focus:not([readonly]),
+.input-field input[type="url"]:focus:not([readonly]),
+.input-field input[type="search"]:focus:not([readonly]),
+.input-field input[type="email"]:focus:not([readonly]),
+.input-field input[type="password"]:focus:not([readonly]),
+.input-field input[type="number"]:focus:not([readonly]),
+.input-field textarea.materialize-textarea:focus:not([readonly]),
+.craue_config_settings_modify [id^="set-"] > div > input[type="text"]:focus {
+  border: 1px solid var(--accent) !important;
+  box-shadow: var(--focus-glow) !important;
+  /* Transparent, not none: forced-colours mode drops the box-shadow but paints the outline */
+  outline: 2px solid transparent;
+}
+
+/* Resting label sits inside the field; active label cuts the notch */
+.input-field > label:not([for="remember_me"]) {
+  top: calc(50% + 2px);
+  left: var(--label-rest-x);
+  transform: translateY(-50%);
+  font-size: var(--label-size);
+  line-height: 2.5;
+  color: var(--text-muted);
+}
+.input-field.col > label:not([for="remember_me"]) {
+  left: var(--label-rest-x);
+}
+/* The notch is painted with the page or card colour behind the field */
+.input-field > label:not(.label-icon).active,
+.craue_config_settings_modify [id^="set-"] > div > label,
+.input-field.col .select-wrapper + label {
+  top: 0;
+  transform: translateY(-50%) scale(.8);
+  transform-origin: 0 50%;
+  height: auto;
+  line-height: 1;
+  padding: 0 4px;
+  left: var(--label-float-x);
+  background-color: var(--bg);
+  border-radius: var(--radius-sm);
+}
+.card .input-field > label:not(.label-icon).active { background-color: var(--bg-raised); }
+.card-panel .input-field > label:not(.label-icon).active,
+.card-panel .craue_config_settings_modify [id^="set-"] > div > label,
+.card-panel .input-field.col .select-wrapper + label {
+  background: linear-gradient(var(--fill-card), var(--fill-card)), var(--bg);
+}
+.input-field.col > label:not(.label-icon).active {
+  left: var(--label-float-x);
+}
+/* The filters panel keeps Materialize's .col padding, and sits on --bg-sidebar */
+.side-nav .input-field.col > label:not([for="remember_me"]) { left: calc(.75rem + var(--label-rest-x)); }
+.side-nav .input-field.col > label:not(.label-icon).active {
+  left: calc(.75rem + var(--label-float-x));
+  background-color: var(--bg-sidebar);
+}
+/* The resting-label rule above also catches checkbox labels: put them back beside their box */
+.input-field > [type="checkbox"] + label,
+.side-nav .input-field.col > [type="checkbox"] + label {
+  top: 0;
+  left: 0;
+  transform: none;
+  line-height: 25px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* Validation: Materialize's states are flattened by the !important border above */
+.input-field input.invalid,
+.input-field textarea.invalid { border-color: var(--red) !important; }
+.input-field input.invalid + label::after,
+.input-field textarea.invalid + label::after { color: var(--red); }
+.input-field input.valid + label::after,
+.input-field textarea.valid + label::after { color: var(--green); }
+
+/* Filter date fields are too narrow side by side for "yyyy-mm-dd": stack them */
+.side-nav .input-field.col.s6:has(> .datepicker) { width: 100%; }
+
+/* Wallabag ships the rename placeholder untranslated ("tag.rename.placeholder") */
+.card-tag-form input::placeholder { color: transparent; }
+
+/* Disabled fields: dashed and dim, not a lookalike of an editable one */
+.input-field input:disabled {
+  border-style: dashed !important;
+  background-color: transparent;
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Keep Chrome's blue autofill fill off the field */
+.input-field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  transition: background-color 0s 600000s, color 0s 600000s;
+}
+
+/* The file input is invisible inside its .btn: show focus on the button */
+.file-field .btn:has(input[type="file"]:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Inline tag rename on /tag/list: fit the chip */
+.card-tag-form input[type="text"],
+.card-tag-form input[type="text"]:focus:not([readonly]) {
+  box-sizing: border-box;
+  height: 26px;
+  margin: 0;
+  padding: 0 6px;
+  font-size: inherit;
+  color: var(--text-strong);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-glow);
+}
+.input-field input:focus:not([readonly]) + label,
+.input-field textarea.materialize-textarea:focus:not([readonly]) + label {
+  color: var(--accent) !important;
+}
+
+/* Internal settings page field rows */
+.craue_config_settings_modify [id^="set-"] {
+  margin-top: var(--settings-gap);
+}
+.craue_config_settings_modify [id^="set-"] > div {
+  position: relative;
+  margin-bottom: var(--settings-gap);
+}
+.craue_config_settings_modify [id^="set-"] > div > label {
+  position: absolute;
+  left: var(--label-float-x) !important;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--label-size) !important;
+  pointer-events: none;
+}
+.craue_config_settings_modify [id^="set-"] > div > input[type="text"] {
+  width: 100%;
+  height: var(--field-height);
+}
+
+.input-field.col .select-wrapper + label {
+  position: absolute;
+  left: var(--label-float-x) !important;
+  color: var(--text-muted);
+  font-size: var(--label-size);
+  pointer-events: none;
+}
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper input.select-dropdown {
+  padding-right: 44px !important;
+}
+.select-wrapper span.caret {
+  position: absolute !important;
+  top: 50% !important;
+  right: 18px !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  border-right: 2px solid var(--text-secondary);
+  border-bottom: 2px solid var(--text-secondary);
+  border-radius: 1px;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  pointer-events: none;
+  transform: translateY(-70%) rotate(45deg) !important;
+}
+[type="checkbox"].filled-in:checked + span:not(.lever)::after,
+[type="checkbox"].filled-in:checked + label::after {
+  border-color: var(--accent) !important;
+  background-color: var(--accent) !important;
+}
+[type="checkbox"]:checked + span:not(.lever)::before,
+[type="checkbox"]:checked + label::before {
+  border-right-color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
+}
+[type="radio"]:checked + span::after,
+[type="radio"]:checked + label::after,
+[type="radio"].with-gap:checked + span::before,
+[type="radio"].with-gap:checked + span::after {
+  border-color: var(--accent) !important;
+  background-color: var(--accent) !important;
+}
+
+/* Filter group headings ("Status", "Public link") are Materialize #9e9e9e */
+#filters div.col.s12 > label { color: var(--text-secondary); }
+
+/* Materialize's unchecked box is #5a5a5a: 2.4:1 on the dark sidebar */
+[type="checkbox"]:not(:checked) + span:not(.lever)::before,
+[type="checkbox"].filled-in:not(:checked) + span:not(.lever)::after { border-color: var(--field-outline); }
+
+/* Switches: pill track, accent when on */
+.switch label .lever { background-color: var(--fill-subtle); }
+.switch label input[type="checkbox"]:checked + .lever { background-color: var(--accent-fill); }
+.switch label input[type="checkbox"]:checked + .lever::after { background-color: var(--accent); }
+
+.dropdown-content,
+html.dark-theme .dropdown-content {
+  padding: 4px 0;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--edge-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+}
+.dropdown-content li,
+html.dark-theme .dropdown-content li { background-color: transparent; }
+.dropdown-content li > a,
+.dropdown-content li > span,
+html.dark-theme .dropdown-content li > a,
+html.dark-theme .dropdown-content li > span { color: var(--text); font-size: .9rem; }
+/* The account menu sits in <nav>, whose link rule is !important */
+nav .dropdown-content li > a,
+html.dark-theme nav .dropdown-content li > a { color: var(--text) !important; }
+#dropdown-account .theme-toggle-icon { font-size: 20px; }
+/* Export and filters panels open from the right */
+.side-nav.right-aligned { border-right: 0; border-left: 1px solid var(--separator); }
+.side-nav.right-aligned h4 { font-size: 1.1rem; font-weight: 600; }
+.dropdown-content li:hover,
+.dropdown-content.select-dropdown li:hover,
+html.dark-theme .dropdown-content li:hover { background-color: var(--bg-hover); }
+.dropdown-content li.active,
+.dropdown-content li.selected,
+.dropdown-content.select-dropdown li.selected,
+html.dark-theme .dropdown-content li.active,
+html.dark-theme .dropdown-content li.selected { background-color: var(--bg-selected); }
+.dropdown-content.select-dropdown li.selected > span { color: var(--accent); font-weight: 600; }
+
+/* --- DATEPICKER (pickadate, filters panel) ----------------------------- */
+.picker__box {
+  background-color: var(--bg-raised);
+  color: var(--text);
+  border: 1px solid var(--edge-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+}
+.picker__calendar-container, .picker__footer { background-color: var(--bg-raised); }
+.picker__select--month.browser-default,
+.picker__select--year.browser-default {
+  background-color: var(--field-fill);
+  color: var(--text);
+  border: 1px solid var(--field-outline);
+  border-radius: var(--radius);
+}
+.picker__weekday { color: var(--text-muted); }
+.picker__day--infocus, .picker__nav--prev, .picker__nav--next { color: var(--text); }
+.picker__day--outfocus, .picker__day--disabled { color: var(--text-tertiary); }
+.picker__day.picker__day--today { color: var(--accent); font-weight: 600; }
+.picker__day.picker__day--selected,
+.picker__day.picker__day--selected:hover,
+.picker--focused .picker__day.picker__day--selected { background-color: var(--accent); color: var(--bg); }
+.picker__day--infocus:hover, .picker__nav--prev:hover, .picker__nav--next:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-strong);
+}
+.picker__date-display { background-color: var(--bg-sidebar); color: var(--text-strong); }
+.picker__footer .btn-flat.picker__today,
+.picker__footer .btn-flat.picker__close { color: var(--accent); }
+.picker__footer .btn-flat.picker__clear { color: var(--red); }
+
+/* --- ERROR PANELS: a red tint, not saturated Materialize red ----------- */
+.card-panel.red {
+  background-color: color-mix(in srgb, var(--red) 12%, transparent) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 40%, transparent);
+}
+.card-panel.red.white-text,
+.card-panel.red.white-text strong { color: var(--text-strong) !important; }
+.dropdown-content .divider,
+html.dark-theme .dropdown-content .divider { background-color: var(--edge-raised); }
+
+.tabs, html.dark-theme .tabs {
+  background-color: transparent;
+  border-bottom: 1px solid var(--separator);
+}
+.tabs .tab a { color: var(--text-secondary); text-transform: none; font-weight: 500; }
+.tabs .tab a:hover, .tabs .tab a.active { color: var(--text-strong); background-color: transparent; }
+.tabs .tab a:focus, .tabs .tab a:focus.active { background-color: var(--bg-hover); }
+.tabs .tab a:focus-visible { outline-offset: -2px; border-radius: var(--radius); }
+.tabs .indicator { background-color: var(--accent); }
+
+body:not(.login) .input-field.col.s1 > a.tooltipped,
+body:not(.login) .input-field.col.s1 > a.tooltipped > i.material-icons {
+  color: var(--text-muted) !important;
+}
+body:not(.login) .input-field.col.s1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 45px;
+}
+body:not(.login) .input-field.col.s1 > a.tooltipped {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 45px;
+}
+body:not(.login) .input-field.col.s1 > a.tooltipped:hover,
+body:not(.login) .input-field.col.s1 > a.tooltipped:focus,
+body:not(.login) .input-field.col.s1 > a.tooltipped:hover > i.material-icons,
+body:not(.login) .input-field.col.s1 > a.tooltipped:focus > i.material-icons {
+  color: var(--text-strong) !important;
+}
+
+.material-tooltip,
+.toast {
+  background-color: var(--text-strong);
+  color: var(--bg);
+  border-radius: var(--radius);
+  font-size: .85rem;
+}
+.material-tooltip .backdrop { background-color: var(--text-strong); }
+/* A trigger's tooltip would sit on top of its own open menu */
+body:has(.dropdown-button.active) .material-tooltip { visibility: hidden !important; }
+
+/* =========================================================================
+   9. READING VIEW — Reed's serif column on the page, no card
+   ========================================================================= */
+#article,
+html.dark-theme #article {
+  background-color: transparent;
+  box-shadow: none;
+}
+@media only screen and (min-width: 992px) {
+  html.dark-theme #article { background-color: transparent; }
+}
+#article > header > h1 {
+  margin: 2rem 0 .75rem;
+  color: var(--text-strong);
+  font-family: var(--sans-font);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+#article > header > h1 .title-edit i.material-icons { font-size: 1.1rem; }
+#article article,
+html.dark-theme #article article {
+  color: var(--text);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+#article article h1, #article article h2, #article article h3,
+#article article h4, #article article h5, #article article h6,
+html.dark-theme #article article h1,
+html.dark-theme #article article h2,
+html.dark-theme #article article h3,
+html.dark-theme #article article h4,
+html.dark-theme #article article h5,
+html.dark-theme #article article h6 {
+  margin: 1.75em 0 .5em;
+  color: var(--text-strong);
+  font-family: var(--sans-font);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+#article article h2 { font-size: 1.4em; }
+#article article h3 { font-size: 1.2em; }
+#article article h4 { font-size: 1.05em; }
+#article article :is(h5, h6) { font-size: 1em; }
+
+#article article a {
+  color: var(--accent);
+  border-bottom: 0;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-underline-offset: .15em;
+}
+#article article a:hover { text-decoration-color: var(--accent); }
+
+#article article img,
+#article article video { border-radius: var(--radius); }
+#article article figure { margin: 1.75em 0; }
+#article article figcaption {
+  margin-top: .5em;
+  color: var(--text-secondary);
+  font-family: var(--sans-font);
+  font-size: .85rem;
+  line-height: 1.4;
+}
+#article article hr {
+  margin: 2rem 1rem;
+  height: 1px;
+  background: var(--separator);
+  border: none;
+}
+/* Wide tables scroll inside the reading column instead of being clipped */
+#article article table {
+  display: block;
+  max-width: fit-content;
+  overflow-x: auto;
+}
+
+#article pre,
+html.dark-theme #article pre,
+html.dark-theme .hljs {
+  padding: 1rem;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--separator);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+/* The pre already sets the size; code's own 0.85em would shrink it again */
+#article pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+}
+#article article code {
+  padding: .1em .3em;
+  background: var(--bg-sidebar);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  font-size: .85em;
+}
+#article article blockquote {
+  margin: 1.5rem 0;
+  padding: 0 1.25rem;
+  /* Upright: long italic passages tire, and <em> inside them can't stand out */
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent);
+}
+
+#article .entry-info { color: var(--text-secondary); }
+#article .entry-info .stats i.material-icons { color: var(--text-muted); }
+#article .entry-info .stats a { color: var(--text-secondary); }
+#article .entry-info .stats a:hover { color: var(--text-strong); }
+#article .entry-info .stats { font-size: .85rem; }
+
+/* Reader tags: one quiet chip, label and remove button together */
+.entry-info .chip-label,
+.entry-info .chip-action {
+  background-color: var(--fill-subtle) !important;
+  transition: background-color var(--ease);
+}
+.entry-info .chip-label { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.entry-info .chip-action { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.entry-info .chip-label:hover, .entry-info .chip-label:active, .entry-info .chip-label:focus,
+.entry-info .chip-action:hover, .entry-info .chip-action:active, .entry-info .chip-action:focus {
+  background-color: var(--accent-fill) !important;
+}
+/* Beats Materialize's `#article .entry-info .chip a/i { color: #fff }`; the <a> is the .chip-label */
+#article .entry-info .chip a.chip-label,
+#article .entry-info .chip .chip-action,
+#article .entry-info .chip .chip-action i { color: var(--text) !important; }
+#article .entry-info .chip a.chip-label:hover,
+#article .entry-info .chip .chip-action:hover i { color: var(--text-strong) !important; }
+
+/* Annotation editor (annotator.js): a themed popover, not a grey/blue widget */
+.annotator-outer .annotator-widget {
+  background: var(--bg-raised);
+  border: 1px solid var(--edge-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+  color: var(--text);
+  font-family: var(--sans-font);
+}
+.annotator-outer .annotator-widget::after { display: none; }   /* light raster pointer */
+.annotator-outer .annotator-item { border-color: var(--separator); }
+.annotator-editor .annotator-item textarea {
+  background: transparent !important;
+  color: var(--text) !important;
+  font-family: var(--sans-font) !important;
+  font-size: .9rem !important;
+}
+.annotator-editor .annotator-item textarea:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+.annotator-editor .annotator-controls {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--separator);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.annotator-editor .annotator-controls a {
+  background: transparent;
+  border: 1px solid var(--field-outline);
+  border-radius: var(--radius);
+  box-shadow: none;
+  text-shadow: none;
+  color: var(--text);
+  font-family: var(--sans-font);
+  font-weight: 600;
+  padding: 2px 12px;
+}
+.annotator-editor .annotator-controls a::after { display: none; }
+.annotator-editor .annotator-controls a:hover,
+.annotator-editor .annotator-controls a:focus-visible { background: var(--bg-hover); color: var(--text-strong); }
+.annotator-editor .annotator-controls a.annotator-save { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.annotator-editor .annotator-controls a.annotator-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+/* "Annotate" button over a selection */
+.annotator-adder {
+  width: 40px;
+  height: 40px;
+  margin-top: -44px;
+  margin-left: -20px;
+  background: var(--bg-raised);
+  border: 1px solid var(--edge-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+}
+.annotator-adder:hover { background: var(--accent-fill); }
+.annotator-adder button {
+  width: 100%;
+  height: 100%;
+  text-indent: 0;
+  font-size: 0;
+  color: var(--accent);
+}
+.annotator-adder button::before {
+  content: "edit";
+  font-family: "Lucide Wallabag";
+  font-size: 20px;
+}
+
+/* Highlights: an accent wash with an underline, distinct from ::selection */
+.annotator-hl {
+  background-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* =========================================================================
+   10. PAGE-SPECIFIC LAYOUT TWEAKS
+   ========================================================================= */
+/* --- HOWTO ------------------------------------------------------------- */
+#set1 h5,
+#set2 h5 {
+  margin: 3.5rem 0 0 0;
+}
+#set1 h5 {
+  margin: 3.5rem 0 1.5rem 0;
+}
+/* Keyboard shortcuts as Reed's kbd keys */
+#set2 td code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 4px 8px;
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-raised);
+  color: var(--text);
+  font-family: var(--mono-font);
+  font-size: .85rem;
+  line-height: 1.1;
+}
+#set2 table {
+  table-layout: fixed;
+  width: 100%;
+}
+#set2 th:first-child,
+#set2 td:first-child {
+  width: 90px;
+}
+#set2 td {
+  padding: 10px 5px;
+}
+
+/* --- TABLES ------------------------------------------------------------ */
+table.striped > tbody > tr:nth-child(odd),
+html.dark-theme table.striped > tbody > tr:nth-child(odd) { background-color: var(--bg-hover); }
+td, th { border-radius: 0; }
+tr, html.dark-theme tr { border-bottom-color: var(--separator); }
+
+/* --- USERS ------------------------------------------------------------- */
+.card-panel .row > .col.s6:has(form[name="search_users"]) + table th,
+.card-panel .row > .col.s6:has(form[name="search_users"]) + table td {
+  padding: var(--table-cell-pad-y) var(--table-cell-pad-x);
+}
+
+/* --- CONFIG ------------------------------------------------------------ */
+#set3 table th,
+#set3 table td,
+#set5 table th,
+#set5 table td,
+#set6 table th,
+#set6 table td {
+  padding: var(--table-cell-pad-y) var(--table-cell-pad-x);
+}
+#set3 table th,
+#set3 table td {
+  text-align: left !important;
+}
+#set3 table th:nth-child(2),
+#set3 table td:nth-child(2) {
+  width: 110px;
+}
+
+/* Two-factor auth table: enabled/disabled as tinted status badges */
+#set3 table tbody td:nth-child(2) {
+  position: relative;
+  text-align: left !important;
+  font-family: var(--sans-font);
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: var(--status-badge-height);
+}
+#set3 table tbody td:nth-child(2) > b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--status-badge-width);
+  min-height: var(--status-badge-height);
+  padding: 0 10px;
+  border-radius: var(--radius);
+  background-color: color-mix(in srgb, var(--green) 15%, transparent);
+  color: var(--green);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1;
+}
+#set3 table tbody td:nth-child(2):not(:has(b))::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  width: var(--status-badge-width);
+  height: var(--status-badge-height);
+  border-radius: var(--radius);
+  background-color: color-mix(in srgb, var(--red) 15%, transparent);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+#set3 table tbody td:nth-child(2):not(:has(b)) {
+  color: var(--red);
+  padding-left: 30px;
+  z-index: 1;
+}
+#set3 table tbody td:nth-child(3) form {
+  display: block;
+  margin: 0 0 6px;
+  text-align: left !important;
+}
+#set3 table tbody td:nth-child(3) .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--accent) !important;
+  font-size: var(--action-link-size);
+  font-weight: 500;
+  line-height: inherit;
+  text-align: left !important;
+  text-transform: none;
+}
+#set3 table tbody td:nth-child(3) form:last-child {
+  margin-bottom: 0;
+}
+#set3 table tbody td:nth-child(3) .btn:hover,
+#set3 table tbody td:nth-child(3) .btn:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--accent-strong) !important;
+  text-decoration: underline;
+}
+#set3 table tbody td:nth-child(3) .btn.disabled,
+#set3 table tbody td:nth-child(3) .btn:disabled {
+  display: none;
+}
+
+/* --- QUICKSTART -------------------------------------------------------- */
+.progress { background-color: var(--fill-subtle); border-radius: var(--radius-sm); }
+.progress .determinate, .progress .indeterminate { background-color: var(--accent); }
+
+.quickstart h3 {
+  margin-left: 8px;
+}
+
+/* --- FOOTER ------------------------------------------------------------ */
+/* The footer is `cyan darken-2`; Wallabag colours it with !important up to
+   `.dark-theme .cyan.darken-2`, so this needs at least that specificity */
+html footer.page-footer.cyan.darken-2 {
+  background-color: var(--bg) !important;
+  color: var(--text-muted);
+}
+/* Its links are `.grey-text.text-lighten-4`: near-white !important */
+footer.page-footer a.grey-text { color: var(--accent) !important; }
+footer.page-footer a.grey-text:hover { color: var(--accent-strong) !important; }
+footer.page-footer .footer-copyright,
+html.dark-theme footer.page-footer .footer-copyright {
+  background-color: transparent;
+  color: var(--text-muted);
+}
