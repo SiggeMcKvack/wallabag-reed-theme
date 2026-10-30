@@ -418,7 +418,6 @@ html.dark-theme nav.cyan.darken-1 {
 nav, nav.cyan, nav.cyan.darken-1 {
   background-color: var(--bg) !important;
   box-shadow: none;
-  border-bottom: 1px solid var(--separator);
 }
 nav .nav-wrapper .brand-logo,
 nav .brand-logo { color: var(--text-strong) !important; font-weight: 600; }
