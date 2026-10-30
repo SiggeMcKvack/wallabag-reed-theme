@@ -1536,11 +1536,26 @@ html.dark-theme .dropdown-content .divider { background-color: var(--edge-raised
   background-color: transparent;
   border-bottom: 1px solid var(--separator);
 }
-.tabs .tab a { color: var(--text-secondary); text-transform: none; font-weight: 500; }
+/* Tabs size to their labels and start at the content edge. Materialize places
+   its sliding indicator as if tabs were equal width, so the active link draws
+   its own underline instead. */
+/* The <li>s also carry grid classes (col s12 m6 l3) that would set their width */
+.tabs .tab,
+.tabs .tab.col { flex: 0 0 auto; width: auto; margin-right: 24px; }
+.tabs .tab:last-child { margin-right: 0; }
+.tabs .tab a { padding: 0; color: var(--text-secondary); text-transform: none; font-weight: 500; }
 .tabs .tab a:hover, .tabs .tab a.active { color: var(--text-strong); background-color: transparent; }
-.tabs .tab a:focus, .tabs .tab a:focus.active { background-color: var(--bg-hover); }
+.tabs .tab a:focus, .tabs .tab a:focus.active { background-color: transparent; }
 .tabs .tab a:focus-visible { outline-offset: -2px; border-radius: var(--radius); }
-.tabs .indicator { background-color: var(--accent); }
+.tabs .indicator { display: none; }
+.tabs .tab a.active { box-shadow: inset 0 -2px var(--accent); }
+.card-panel.settings .tabs-container { padding-bottom: 24px; }
+/* Wallabag stacks the tabs into a full-width list below 993px; keep the
+   desktop row and let it scroll sideways instead */
+@media only screen and (max-width: 992px) {
+  .tabs { display: flex; height: 48px; scrollbar-width: none; }
+  .tabs .tab { min-width: 0; }
+}
 
 body:not(.login) .input-field.col.s1 > a.tooltipped,
 body:not(.login) .input-field.col.s1 > a.tooltipped > i.material-icons {
