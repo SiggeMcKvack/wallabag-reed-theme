@@ -429,6 +429,7 @@ html.dark-theme .nav-panels {
 }
 .nav-panels .action {
   margin: 7px;
+  font-weight: 500;
 }
 .nav-panel-top,
 .nav-panel-actions {
