@@ -561,7 +561,7 @@ html.dark-theme .side-nav.fixed .collapsible-body { background-color: var(--bg-s
 html.dark-theme .side-nav li > a,
 html.dark-theme .side-nav li button {
   color: var(--text) !important;
-  font-size: .9rem;
+  font-size: 1rem;
   font-weight: 400;
 }
 
