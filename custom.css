@@ -971,19 +971,30 @@ html.dark-theme .card .card-reveal {
   color: var(--text);
 }
 
-/* list mode */
-.collection, .collection .collection-item,
-html.dark-theme .collection,
-html.dark-theme .collection .collection-item {
-  background-color: var(--fill-card);
-  border-color: var(--separator);
+/* list mode: rows on the page, a hairline between them, no box around the list.
+   Inset 1rem like .results, less the rows' 8px padding, so thumbnails and row
+   ends line up with the content edges. */
+.collection,
+html.dark-theme .collection {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  margin: .5rem calc(1rem - 8px) 1rem;
 }
-/* Rows sit on the list's fill; a second one darkens them past --text-muted */
 .collection .collection-item,
-html.dark-theme .collection .collection-item { background-color: transparent; }
+html.dark-theme .collection .collection-item {
+  background-color: transparent;
+  border-bottom: 1px solid var(--separator);
+}
+#content .collection .collection-item {
+  height: auto;
+  min-height: 0;
+  padding: 12px 8px;
+}
 .collection .collection-item:hover,
 html.dark-theme .collection .collection-item:hover {
   background-color: var(--bg-hover);
+  border-radius: var(--radius);
 }
 
 /* =========================================================================
@@ -995,8 +1006,67 @@ html.dark-theme .collection .collection-item:hover {
 .card-stacked.archived .card-preview { opacity: .62; }
 /* The <a> around the picture is inline with no size: ring the picture */
 .card-preview > a:focus-visible .preview { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* Row actions only show on hover; show them when focus enters the row too */
-.card-stacked:focus-within ul.tools-list { display: inline; text-align: right; }
+.collection .card-stacked {
+  position: relative;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+}
+.collection .card-stacked .entry-checkbox { margin: 0; }
+.collection .card-stacked .card-preview {
+  flex: 0 0 64px;
+  max-width: none;
+  max-height: none;
+  height: 48px;
+  margin: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.collection .card-preview > a { display: block; height: 100%; }
+.collection .card-stacked .preview--default { background-size: auto 70%; }
+.collection .card-stacked div.card-content {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+.collection .card-stacked .card-content a.card-title {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+/* Meta line: domain, reading time, then tags */
+.collection .card-stacked div.metadata {
+  height: auto;
+  margin-top: 4px;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.collection .card-stacked div.metadata .reading-time { order: 1; margin-left: 0; padding: 0; }
+.collection .card-stacked div.metadata ul.tags { order: 2; margin: 0; }
+
+/* Row actions float over the row end instead of pushing the reading time aside;
+   they show on hover, and when focus enters the row too. The text makes room
+   for them so a long title ellipsizes before it reaches the icons. */
+.collection .card-stacked ul.tools-list {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: none;
+  margin: 0;
+}
+.collection .card-stacked:hover ul.tools-list,
+.collection .card-stacked:focus-within ul.tools-list { display: flex; }
+.collection .card-stacked:hover div.card-content,
+.collection .card-stacked:focus-within div.card-content { padding-right: 130px; }
+.collection .card-stacked ul.tools-list > li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
 .card-stacked .card-content .card-title,
 .card-stacked .card-content a.card-title {
