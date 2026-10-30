@@ -466,6 +466,24 @@ nav ul a {
   transition: background-color var(--ease), color var(--ease);
 }
 nav ul a:hover { background-color: var(--bg-hover); }
+/* Toolbar icons: 20px glyphs in square 38px hit areas, so the hover fill is a rounded square */
+/* Outer glyphs line up with the content edges: #content .5rem + .results 1rem, minus the 9px hit-area padding */
+.nav-panel-actions {
+  padding-left: calc(1.5rem - 9px);
+  padding-right: calc(1.5rem - 9px);
+}
+.nav-panel-actions ul a { display: inline-flex; }
+.nav-panel-actions ul a,
+.nav-panel-top .button-collapse {
+  padding: 9px;
+  height: auto;
+}
+.nav-panel-actions ul a i.material-icons,
+.nav-panel-top .button-collapse i.material-icons {
+  font-size: 20px;
+  height: 20px;
+  line-height: 20px;
+}
 
 /* theme uses !important here (nav.scss:82) — must match */
 .nav-panel-item .add,
@@ -505,13 +523,11 @@ html.dark-theme .nav-panels .close:focus {
   justify-content: center;
   width: auto;
   min-width: 0;
-  padding: 10px;
+  padding: 9px;
 }
+/* Wallabag spreads the toolbar with space-between on mobile (class name is its own typo) */
 @media only screen and (max-width: 992px) {
-  .nav-panel-button {
-    justify-content: flex-end;
-    gap: 7px;
-  }
+  .nav-panel-buttom { justify-content: flex-end; }
 }
 
 nav ul button        { color: var(--text-secondary); }
