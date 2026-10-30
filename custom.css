@@ -310,15 +310,16 @@ button.btn-link.results-item {
   justify-content: center;
   vertical-align: middle;
 }
-button.btn-link.results-item:hover,
-button.btn-link.results-item:hover i.material-icons,
-button.btn-link.results-item:focus,
-button.btn-link.results-item:focus i.material-icons,
+button.btn-link.results-item:focus-visible,
 .results:has(~ #mass-action-inputs-displayed:focus-visible) label.mass-action-toggle {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
+button.btn-link.results-item:hover,
+button.btn-link.results-item:hover i.material-icons,
+button.btn-link.results-item:focus,
+button.btn-link.results-item:focus i.material-icons,
 label.mass-action-toggle.results-item:hover,
 label.mass-action-toggle.results-item:hover i.material-icons,
 label.mass-action-toggle.results-item:focus,
