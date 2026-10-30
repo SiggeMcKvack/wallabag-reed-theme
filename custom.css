@@ -666,6 +666,24 @@ html.dark-theme .card-panel {
   padding-left: 0;
   padding-right: 0;
 }
+/* Settings fields: a readable column with the help icon right beside the field,
+   instead of an 11/12 grid column with the icon in the last twelfth */
+.card-panel.settings form > .row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 40rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+.card-panel.settings form > .row > .col { float: none; }
+.card-panel.settings form > .row > .col.s11 { flex: 1; width: auto; min-width: 0; }
+.card-panel.settings form > .row > .col.s1 { flex: 0 0 auto; width: auto; }
+/* Rows without a help icon keep its space, so every field ends at the same edge */
+.card-panel.settings form > .row:not(:has(> .col.s1)) { padding-right: 28px; }
+/* A checkbox label's text sits on its first 25px line: centre the icon there */
+.card-panel.settings form > .row:has(.settings-checkbox-col) > .col.s1,
+.card-panel.settings form > .row:has(.settings-checkbox-col) > .col.s1 > a.tooltipped { height: 25px; }
 .quickstart ul.row > li.col.l4.m6.s12 {
   padding-left: 8px;
   padding-right: 8px;
