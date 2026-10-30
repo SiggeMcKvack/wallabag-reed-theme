@@ -473,13 +473,13 @@ nav ul a:hover { background-color: var(--bg-hover); }
   padding-left: calc(1.5rem - 9px);
   padding-right: calc(1.5rem - 9px);
 }
-.nav-panel-actions ul a { display: inline-flex; }
-.nav-panel-actions ul a,
+.nav-panel-buttom > li > a { display: inline-flex; }
+.nav-panel-buttom > li > a,
 .nav-panel-top .button-collapse {
   padding: 9px;
   height: auto;
 }
-.nav-panel-actions ul a i.material-icons,
+.nav-panel-buttom > li > a i.material-icons,
 .nav-panel-top .button-collapse i.material-icons {
   font-size: 20px;
   height: 20px;
@@ -1446,7 +1446,19 @@ html.dark-theme .dropdown-content li > span { color: var(--text); font-size: .9r
 /* The account menu sits in <nav>, whose link rule is !important */
 nav .dropdown-content li > a,
 html.dark-theme nav .dropdown-content li > a { color: var(--text) !important; }
-#dropdown-account .theme-toggle-icon { font-size: 20px; }
+/* ...and its hover fill: the row highlights, not the link inside it */
+nav .dropdown-content li > a,
+nav .dropdown-content li > a:hover {
+  background-color: transparent;
+  border-radius: 0;
+}
+.dropdown-content li { padding-right: 0; }
+.dropdown-content li > a { padding: 9px 14px; }
+.dropdown-content li > a > i.material-icons {
+  font-size: 20px;
+  width: 20px;
+  margin-right: 16px;
+}
 /* Export and filters panels open from the right */
 .side-nav.right-aligned { border-right: 0; border-left: 1px solid var(--separator); }
 .side-nav.right-aligned h4 { font-size: 1.1rem; font-weight: 600; }
@@ -1543,8 +1555,10 @@ body:not(.login) .input-field.col.s1 > a.tooltipped:focus > i.material-icons {
   font-size: .85rem;
 }
 .material-tooltip .backdrop { background-color: var(--text-strong); }
-/* A trigger's tooltip would sit on top of its own open menu */
-body:has(.dropdown-button.active) .material-tooltip { visibility: hidden !important; }
+/* A trigger's tooltip would sit on top of its own open menu. display, not
+   visibility: Materialize sets an inline visibility on the backdrop, which
+   would leave an empty dark box. */
+body:has(.dropdown-button.active) .material-tooltip { display: none !important; }
 
 /* =========================================================================
    9. READING VIEW — Reed's serif column on the page, no card
