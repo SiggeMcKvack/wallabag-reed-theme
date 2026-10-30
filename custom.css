@@ -163,7 +163,7 @@ html.dark-theme {
 
   --bg: #2b2422;
   --bg-sidebar: #221c1a;
-  --bg-hover: #ffffff08;
+  --bg-hover: #ffffff0f;
   --bg-selected: #ffffff12;
   --bg-raised: #3a312e;
   --separator: #3a322f;
@@ -718,6 +718,13 @@ html.dark-theme .card-stacked .preview:not(.preview--default) {
   background-color: var(--bg-sidebar);
   border-radius: 0;
 }
+/* Dark mode inverts the placeholder to whiten the logo, which would also turn its
+   fill light grey: put the fill on the frame and keep the placeholder clear */
+.card .card-image,
+.card .card-fullimage,
+.card-stacked .card-preview { background-color: var(--bg-sidebar); }
+.card .preview.preview--default,
+.card-stacked .preview.preview--default { background-color: transparent; }
 
 .card .card-content { color: var(--text); }
 .card .card-content .card-title,
@@ -1076,8 +1083,6 @@ html.dark-theme .collection .collection-item:hover {
 }
 .card-stacked .card-content a.card-title:hover { color: var(--accent) !important; }
 
-.card-stacked .card-preview .preview,
-.card-stacked .preview { background-color: var(--bg-sidebar); }
 
 /* domain + reading time in list mode */
 .card-stacked div.metadata .reading-time,
