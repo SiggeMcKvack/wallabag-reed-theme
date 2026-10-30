@@ -40,6 +40,10 @@ pip install fonttools brotli skia-pathops
 tools/build-icons.py package
 ```
 
+## Test entries
+
+`tools/seed-entries.py` generates articles for checking the theme: every HTML element, Greek, Cyrillic, Arabic and Japanese text, long titles and URLs, many tags, odd image sizes, a very long read, empty, archived and starred entries, and enough filler to fill several pages. The usage is in the script header.
+
 ## License
 
 [AGPL-3.0](LICENSE), inherited from Reed. Lucide icons are [ISC licensed](LICENSE-lucide). Inter and Literata are OFL-1.1 licensed ([Inter](LICENSE-inter), [Literata](LICENSE-literata)).
